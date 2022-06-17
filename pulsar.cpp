@@ -8,7 +8,6 @@
 #include "ext/standard/info.h"
 #include "php_pulsar.h"
 #include "pulsar_arginfo.h"
-#include <pulsar/Version.h>
 
 #include "pulsar_client.h"
 #include "pulsar_producer.h"
@@ -106,11 +105,9 @@ PHP_MINIT_FUNCTION(pulsar)
 /* {{{ PHP_MINFO_FUNCTION */
 PHP_MINFO_FUNCTION(pulsar)
 {
-#define VERSION_XSTR(s) VERSION_STR(s)
-#define VERSION_STR(s) #s
 	php_info_print_table_start();
 	php_info_print_table_header(2, "pulsar support", "enabled");
-	php_info_print_table_header(2, "pulsar client library version", VERSION_XSTR(PULSAR_VERSION));
+	php_info_print_table_header(2, "pulsar client version", PHP_PULSAR_VERSION);
 	php_info_print_table_end();
 }
 /* }}} */
