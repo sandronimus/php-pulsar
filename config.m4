@@ -36,6 +36,6 @@ if test "$PHP_PULSAR" != "no"; then
 
     PHP_SUBST(PULSAR_SHARED_LIBADD)
 
-    PULSAR_PHP_SOURCES="pulsar.cpp pulsar_client.cpp pulsar_producer.cpp pulsar_message_builder.cpp pulsar_message.cpp"
-    PHP_NEW_EXTENSION(pulsar, $PULSAR_PHP_SOURCES, $ext_shared,, -std=c++0x -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
+    PULSAR_PHP_SOURCES="pulsar.cpp pulsar_client.cpp pulsar_producer.cpp pulsar_message_builder.cpp pulsar_message.cpp pulsar_consumer.cpp"
+    PHP_NEW_EXTENSION(pulsar, $PULSAR_PHP_SOURCES, $ext_shared,, -std=c++11 -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
 fi

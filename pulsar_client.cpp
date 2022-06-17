@@ -1,5 +1,6 @@
 #include "pulsar_client.h"
 #include "pulsar_producer.h"
+#include "pulsar_consumer.h"
 
 /* {{{ PulsarClient_objects_dtor */
 void PulsarClient_object_dtor(zend_object *object)
@@ -49,7 +50,7 @@ PHP_METHOD(Pulsar_Client, __construct)
     PulsarClient_object* ptr = nullptr;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
-            Z_PARAM_STR(serviceUrl)
+        Z_PARAM_STR(serviceUrl)
     ZEND_PARSE_PARAMETERS_END();
 
     object = getThis();
@@ -68,7 +69,7 @@ PHP_METHOD(Pulsar_Client, createProducer)
     PulsarClient_object* ptr = nullptr;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
-            Z_PARAM_STR(topic)
+        Z_PARAM_STR(topic)
     ZEND_PARSE_PARAMETERS_END();
 
     object = getThis();
@@ -78,6 +79,32 @@ PHP_METHOD(Pulsar_Client, createProducer)
     PulsarProducer_object *pulsarProducerObject = php_pulsar_producer_fetch_object(Z_OBJ_P(return_value));
     pulsarProducerObject->producer = new pulsar::Producer();
     if (ptr->client->createProducer(ZSTR_VAL(topic), *pulsarProducerObject->producer) != pulsar::ResultOk) {
+        RETURN_THROWS();
+    }
+}
+/* }}} */
+
+/* {{{ proto Pulsar\Client::subscribe(string $topic, string $subscriptionName): Pulsar\Consumer
+ */
+PHP_METHOD(Pulsar_Client, subscribe)
+{
+    zend_string *topic;
+    zend_string *subscriptionName;
+    zval *object;
+    PulsarClient_object* ptr;
+
+    ZEND_PARSE_PARAMETERS_START(2, 2)
+        Z_PARAM_STR(topic)
+        Z_PARAM_STR(subscriptionName)
+    ZEND_PARSE_PARAMETERS_END();
+
+    object = getThis();
+    ptr = php_pulsar_client_fetch_object(Z_OBJ_P(object));
+
+    object_init_ex(return_value, PulsarConsumer_ce);
+    PulsarConsumer_object *pulsarConsumerObject = php_pulsar_consumer_fetch_object(Z_OBJ_P(return_value));
+    pulsarConsumerObject->consumer = new pulsar::Consumer();
+    if (ptr->client->subscribe(ZSTR_VAL(topic), ZSTR_VAL(subscriptionName), *pulsarConsumerObject->consumer) != pulsar::ResultOk) {
         RETURN_THROWS();
     }
 }

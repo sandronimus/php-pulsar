@@ -8,6 +8,7 @@ class Client {
     public function __construct(string $serviceUrl);
 
     public function createProducer(string $topic): Producer;
+    public function subscribe(string $topic, string $subscriptionName): Consumer;
 }
 
 class Producer {
@@ -23,4 +24,12 @@ class MessageBuilder {
 }
 
 class Message {
+    public function getDataAsString(): string;
+    public function getProperties(): array;
+}
+
+class Consumer {
+    public function receive(): Message;
+    public function acknowledge(Message $message): int;
+    public function negativeAcknowledge(Message $message): void;
 }

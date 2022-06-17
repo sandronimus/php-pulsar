@@ -13,6 +13,7 @@
 #include "pulsar_producer.h"
 #include "pulsar_message_builder.h"
 #include "pulsar_message.h"
+#include "pulsar_consumer.h"
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
@@ -32,6 +33,9 @@ zend_object_handlers PulsarMessageBuilder_object_handlers;
 
 zend_class_entry *PulsarMessage_ce;
 zend_object_handlers PulsarMessage_object_handlers;
+
+zend_class_entry *PulsarConsumer_ce;
+zend_object_handlers PulsarConsumer_object_handlers;
 
 /* {{{ PHP_MINIT_FUNCTION */
 PHP_MINIT_FUNCTION(pulsar)
@@ -97,6 +101,20 @@ PHP_MINIT_FUNCTION(pulsar)
     PulsarMessage_object_handlers.clone_obj = NULL; //no clone support
     PulsarMessage_object_handlers.dtor_obj = PulsarMessage_object_dtor;
     PulsarMessage_object_handlers.free_obj = PulsarMessage_object_free;
+
+    PulsarConsumer_ce = register_class_Pulsar_Consumer();
+    PulsarConsumer_ce->create_object = PulsarConsumer_object_create;
+    if (!PulsarConsumer_ce) {
+        zend_error(E_ERROR, "Failed to register Pulsar\\Consumer class");
+        return FAILURE;
+    }
+    memcpy(&PulsarConsumer_object_handlers, zend_get_std_object_handlers(),
+           sizeof PulsarConsumer_object_handlers);
+    PulsarConsumer_object_handlers.offset =
+            XtOffsetOf(PulsarConsumer_object, zo);
+    PulsarConsumer_object_handlers.clone_obj = NULL; //no clone support
+    PulsarConsumer_object_handlers.dtor_obj = PulsarConsumer_object_dtor;
+    PulsarConsumer_object_handlers.free_obj = PulsarConsumer_object_free;
 
     return SUCCESS;
 }
