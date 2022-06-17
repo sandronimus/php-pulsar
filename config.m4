@@ -3,7 +3,7 @@ dnl config.m4 for extension pulsar
 PHP_ARG_ENABLE(pulsar, whether to enable pulsar support,
     [  --enable-pulsar           Enable pulsar support])
 
-if test "$PHP_pulsar" != "no"; then
+if test "$PHP_PULSAR" != "no"; then
     PHP_REQUIRE_CXX()
 
     SEARCH_PATH="/usr/local /usr /opt/local"
@@ -26,6 +26,8 @@ if test "$PHP_pulsar" != "no"; then
         AC_MSG_RESULT([not found])
         AC_MSG_ERROR([Please reinstall the Pulsar distribution])
     fi
+
+    PHP_ADD_INCLUDE($PULSAR_DIR/include)
 
     PHP_ADD_LIBRARY_WITH_PATH(pulsar, $PULSAR_DIR/lib, PULSAR_SHARED_LIBADD)
 
