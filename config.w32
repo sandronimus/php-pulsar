@@ -1,0 +1,7 @@
+ARG_ENABLE('pulsar', 'pulsar support', 'no');
+
+if (PHP_PULSAR != 'no') {
+	AC_DEFINE('HAVE_PULSAR', 1, 'pulsar support enabled');
+
+	EXTENSION('pulsar', 'pulsar.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}
